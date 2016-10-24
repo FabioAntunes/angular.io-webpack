@@ -11,14 +11,15 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.ts', '.js']
+    extensions: ['.ts', '.js']
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts$/,
-        loaders: ['awesome-typescript-loader', 'angular2-template-loader']
+        loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+        exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
         test: /\.html$/,
@@ -31,7 +32,10 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style-loader',
+          loader: 'css-loader'
+        })
       },
       {
         test: /\.css$/,
@@ -43,7 +47,14 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
+      // Optimizing ensures loading order in index.html
+      name: ['polyfills', 'vendor', 'app'].reverse()
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      minChunks: Infinity,
+      name: 'inline',
+      filename: 'inline.js',
+      sourceMapFilename: 'inline.map'
     }),
 
     new HtmlWebpackPlugin({

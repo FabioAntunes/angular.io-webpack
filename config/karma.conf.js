@@ -23,8 +23,13 @@ module.exports = function (config) {
     webpackServer: {
       noInfo: true
     },
-
-    reporters: ['progress'],
+    remapIstanbulReporter: {
+      reports: {
+        html: 'coverage',
+        lcovonly: './coverage/coverage.lcov'
+      }
+    },
+    reporters: ['progress', 'karma-remap-istanbul'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

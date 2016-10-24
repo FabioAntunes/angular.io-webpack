@@ -7,4 +7,8 @@ import '../../public/css/styles.css';
 })
 export class AppComponent {
   title = 'Hello from Angular App with Webpack';
+
+  someFuncNotCoveredByTests() {
+    console.log("I'm not covered by tests");
+  }
 }
